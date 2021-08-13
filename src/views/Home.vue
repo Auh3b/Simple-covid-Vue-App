@@ -17,7 +17,7 @@
         <DataTable :covidData="covidData"/>
       </div>
       <div id="map" class="w-2/2">
-      <Map :covidData="covidData" :category="clickedCategory" @selectedDistrict="updateQuickStats"/>
+      <Map :covidData="covidData" :category="clickedCategory"/>
       </div>
     </div>
     <div class="chart hidden lg:block w-4/6 mx-10 mt-10 shadow-lg rounded mx-auto">
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+
 import moment from "moment"
 import Header from "@/components/Header"
 import QuickStat from "@/components/QuickStat"
@@ -43,6 +44,8 @@ import DataTable from "@/components/DataTable"
 import Map from "@/components/Map"
 import Chart from "@/components/Chart"
 import Footer from "@/components/Footer"
+
+document.title = "Malawi Covid-19 Update"
 
 export default {
   name: 'Home',
@@ -82,9 +85,6 @@ export default {
         quickStats.push({name: param.name ,category: param.lookUp, stat:  data.districts.map(d => d[param.lookUp]).reduce((i, l)=> i + l)})
       })
       return quickStats
-    },
-    updateQuickStats(district){
-      // console.log(district)
     },
     formatDate(x){
       return moment(x).format("Do MMMM YYYY")
