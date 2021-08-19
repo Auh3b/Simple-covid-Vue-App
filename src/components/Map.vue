@@ -95,6 +95,7 @@ export default {
                         .attr("cy", ({districtGeolocation})=> projection([districtGeolocation.lng, districtGeolocation.lat])[1])
                     .transition()
                     .duration(500)
+                    .ease(d3.easeBounce)
                         .attr("r", d=> size(d[this.category]))
                         .style("fill",  color())
                         .attr("stroke", "#1F2937")
