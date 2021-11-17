@@ -94,7 +94,7 @@ export default {
     }
   },
   async created(){
-    const data = await this.fetchData("https://covid19.health.gov.mw:3000/api/v0/districts/aggregates")
+    const data = await this.fetchData("https://covid19.health.gov.mw/api/districts/aggregates")
     const timeline = await this.fetchData("https://disease.sh/v3/covid-19/historical/malawi?lastdays=all")
     this.timelineData = timeline.timeline
     this.covidData = data.districts
