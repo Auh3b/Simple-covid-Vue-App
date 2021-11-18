@@ -3,9 +3,12 @@
 </template>
 <script>
 import * as d3 from "d3"
+import { mapGetters } from 'vuex'
 export default {
     name:"Chart",
-    props:["chartData"],
+    computed:{
+        ...mapGetters({chartData: "getCovidTimeline"})
+    },
     mounted(){
         this.chartTimeline(this.chartData)
     },
@@ -50,10 +53,11 @@ export default {
 
             const xAxisG = g
                         .append("g")
+                        .attr("class", "x-axis")
                         .call(xAxis)
                         .attr("transform", `translate(0, ${innerHeight})`);
 
-            const yAxisG = g.append("g").call(yAxis)
+            const yAxisG = g.append("g").attr("class", "y-axis").call(yAxis)
 
             // color
             const color = d =>{
@@ -85,7 +89,12 @@ export default {
 }
 </script>
 <style>
-.tick line,.domain{
-    opacity: 0.3;
+.x-axis .domain, 
+.y-axis .domain{
+    stroke: none;
+}
+.x-axis .tick line,
+.y-axis .tick line{
+    opacity: 0.1;
 }
 </style>

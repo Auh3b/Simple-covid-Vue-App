@@ -7,14 +7,22 @@
 <script>
 import * as d3 from "d3"
 import * as topojson from "topojson"
+import { mapGetters } from 'vuex'
 export default {
     name:"Map",
-    props:['covidData',"category"],
+    computed:{
+        ...mapGetters({mapData: "getMapData"}),
+    },
     mounted(){
     this.chartPoints()
     },
     updated(){
         this.chartPoints()
+    },
+    watch:{
+        mapData(){
+            this.chartPoints()
+        }
     },
     methods:{
         chartPoints(){
@@ -27,16 +35,16 @@ export default {
             const innerHeight = height - margin.top - margin.bottom
 
             // color picker
-            let color =()=>{
-                return this.category === "numberOfActiveCases" ? "#B45309":
-                        this.category === "numberOfConfirmedCases"? "#374151":
-                        this.category === "numberOfConfirmedDeaths"? "#B91C1C":
+            let color =(d)=>{
+                return d.category === "numberOfActiveCases" ? "#B45309":
+                        d.category === "numberOfConfirmedCases"? "#374151":
+                        d.category === "numberOfConfirmedDeaths"? "#B91C1C":
                         "#047857"
             }
 
             var size = d3.scaleLinear()
-                        .domain(d3.extent(this.covidData, d=>d[this.category]))  // What's in the data
-                        .range([ 1,200])
+                        .domain(d3.extent(this.mapData, d=>d.currentParam))  // What's in the data
+                        .range([ 1,100])
 
 
             d3.json("https://raw.githubusercontent.com/Auh3b/data/master/covid_data.json").then(data =>{
@@ -63,7 +71,7 @@ export default {
                 // // add circles
                 let circles = svg
                                 .selectAll("circle")
-                                .data(this.covidData.filter(d=> d.districtName !=="" || d.districtName === "Malawi"))
+                                .data(this.mapData.filter(d=> d.districtName !=="" || d.districtName === "Malawi"))
                 
                
 
@@ -76,7 +84,7 @@ export default {
                         d3.select(".tooltip")
                             .html(`<div>
                                     ${d.districtName}: 
-                                    ${d[this.category]}
+                                    ${d.currentParam}
                                     </div>`)
                             .style("right", `${-15}px`)
                             .style("top", `${10}px`)
@@ -96,8 +104,8 @@ export default {
                     .transition()
                     .duration(500)
                     .ease(d3.easeBounce)
-                        .attr("r", d=> size(d[this.category]))
-                        .style("fill",  color())
+                        .attr("r", d=> size(d.currentParam))
+                        .style("fill",  d=> color(d))
                         .attr("stroke", "#1F2937")
                         .attr("stroke-width", 1)
                         .attr("fill-opacity", .4)

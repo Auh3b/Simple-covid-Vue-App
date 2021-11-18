@@ -11,7 +11,7 @@
             
         </thead>
         <tbody class="h-60">
-            <tr class="bg-gray-100 text-gray-800" v-for="district in covidData.filter(d => d.districtName !== '')" :key="district.districtName">
+            <tr class="bg-gray-100 text-gray-800" v-for="district in covidData.districts" :key="district.districtName">
                 <td class="px-4 py-3 border">{{ district.districtName}}</td>
                 <td class="px-4 py-3 border">{{formatNum(district.numberOfActiveCases) }}</td>
                 <td class="px-4 py-3 border">{{formatNum(district.numberOfConfirmedCases) }}</td>
@@ -23,10 +23,13 @@
 
 </template>
 <script>
+import {mapGetters} from "vuex"
 export default {
     name:"DataTable",
-    props:['covidData'],
-     methods:{
+    computed:{
+        ...mapGetters({covidData: "getCovidData"}),
+    },
+    methods:{
         formatNum(x){
               return x !== null ? x.toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ','): x;

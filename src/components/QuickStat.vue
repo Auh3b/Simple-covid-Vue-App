@@ -1,29 +1,20 @@
 <template>
-    <button @click="changeMap" class="card rounded py-5 px-4 text-center bg-gray-200 text-gray-800 hover:bg-gray-400 
-    focus:ring-2 ring-gray-400 ring-offset-1
-    hover:text-gray-100 focus:bg-gray-800 focus:text-gray-100 divide-y divide-gray-300 ">
-        <h3 class="font-bold  pb-1 mb-1 ">{{data.name}}</h3>
-        <p class="text-3xl ">{{formatNum(data.stat) }}</p>
-    </button>
+    <div class="flex w-2/3 mx-auto justify-between mb-10">
+        <div v-for="(data, index) in quickStats" :key="index">
+         <Stat :data="data"/>
+        </div>
+    </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
+import Stat from "./Stat.vue"
 export default {
-    name:"QuickStat",
-    props:['data'],
-    data(){
-        return{
-            selection:"",
-        }
+    name: "QuickStat",
+    components:{
+        Stat
     },
-    methods:{
-        formatNum(x){
-              return x.toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        },
-        changeMap(){
-            const category = this.data.category
-            this.$emit("getClickedCategory", category)
-        }
-    }
-}
+    computed: {
+        ...mapGetters({ quickStats: "getQuickStats" }),
+    },
+};
 </script>
